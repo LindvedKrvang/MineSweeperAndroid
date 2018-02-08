@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:background="@android:color/darker_gray"
     android:orientation="vertical"
-    tools:context="com.krvang.lindved.minesweeper.MainActivity">
+    tools:context="com.krvang.lindved.minesweeper.gui.MainActivity">
 
 
     <LinearLayout

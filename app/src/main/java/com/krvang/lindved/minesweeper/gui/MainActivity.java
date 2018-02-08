@@ -1,4 +1,4 @@
-package com.krvang.lindved.minesweeper;
+package com.krvang.lindved.minesweeper.gui;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
@@ -9,12 +9,15 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.krvang.lindved.minesweeper.R;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private LinearLayout mGameBoard;
 
     private int mRow, mCols;
+    private Tile[][] mTiles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         mRow = 10;
         mCols = 10;
+        mTiles = new Tile[mRow][mCols];
 
         View.OnClickListener ocl = new View.OnClickListener() {
             @Override
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 Tile tile = new Tile(this, i, j);
                 layoutRow.addView(tile);
                 tile.setOnClickListener(ocl);
+                mTiles[i][j] = tile;
             }
         }
     }
