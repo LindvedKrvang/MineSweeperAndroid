@@ -9,16 +9,16 @@ import java.util.Random;
 public class GameBoard implements IGameBoard {
 
     private final int BOMB_DISTRIBUTION_FACTOR = 4;
+    private final int AMOUNT_OF_BOMBS = 25;
 
-    private int mRows, mCols, mAmountOfBombs, mAvailableTiles;
+    private int mRows, mCols, mAvailableTiles;
     private boolean[][] mBombMatrix;
 
 
-    public GameBoard(int rows, int cols, int amountOfBombs){
+    public GameBoard(int rows, int cols){
         mBombMatrix = new boolean[rows][cols];
         mRows = rows;
         mCols = cols;
-        mAmountOfBombs = amountOfBombs;
         mAvailableTiles = rows * cols;
 
         populateBombs();
@@ -30,11 +30,11 @@ public class GameBoard implements IGameBoard {
         int tilesPlaced = 0;
         for(int i = 0; i < mRows; i++){
             for(int j = 0; j < mCols; j++){
-                if(rand.nextInt(BOMB_DISTRIBUTION_FACTOR) == 0 && bombsPlaced != mAmountOfBombs){
+                if(rand.nextInt(BOMB_DISTRIBUTION_FACTOR) == 0 && bombsPlaced != AMOUNT_OF_BOMBS){
                     mBombMatrix[i][j] = true;
                     bombsPlaced++;
                     tilesPlaced++;
-                }else if(mAvailableTiles - tilesPlaced == mAmountOfBombs - bombsPlaced){
+                }else if(mAvailableTiles - tilesPlaced == AMOUNT_OF_BOMBS - bombsPlaced){
                     mBombMatrix[i][j] = true;
                     bombsPlaced++;
                     tilesPlaced++;

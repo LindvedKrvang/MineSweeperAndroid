@@ -15,6 +15,7 @@ import com.krvang.lindved.minesweeper.bll.IGameBoard;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private LinearLayout mGameBoardLayout;
 
     private IGameBoard mGameBoard;
@@ -32,20 +33,16 @@ public class MainActivity extends AppCompatActivity {
         mCols = 10;
         mTiles = new Tile[mRow][mCols];
 
-        mGameBoard = new GameBoard(mRow, mCols, 25);
+        mGameBoard = new GameBoard(mRow, mCols);
 
-        View.OnClickListener ocl = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Tile tile = (Tile)v;
-                tile.showPosition();
-            }
-        };
+        View.OnClickListener ocl = createOnClickListener();
 
-        instantiateBoard(ocl);
+        View.OnLongClickListener olcl = createOnLongClickListener();
+
+        instantiateBoard(ocl, olcl);
     }
 
-    private void instantiateBoard(View.OnClickListener ocl){
+    private void instantiateBoard(View.OnClickListener ocl, View.OnLongClickListener olcl){
         mGameBoardLayout = findViewById(R.id.llGameBoard);
         mGameBoardLayout.removeAllViews();
         for(int i = 0; i < mRow; i++){
@@ -56,9 +53,40 @@ public class MainActivity extends AppCompatActivity {
                 Tile tile = new Tile(this, i, j);
                 layoutRow.addView(tile);
                 tile.setOnClickListener(ocl);
+                tile.setOnLongClickListener(olcl);
                 mTiles[i][j] = tile;
             }
         }
+    }
+
+    private View.OnClickListener createOnClickListener(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Tile tile = (Tile)v;
+//                tile.showPosition();
+                tile.clicked();
+            }
+        };
+    }
+
+    private View.OnLongClickListener createOnLongClickListener(){
+        return new View.OnLongClickListener(){
+
+            @Override
+            public boolean onLongClick(View v) {
+                Tile tile = (Tile)v;
+                tile.switchFlag();
+                return true;
+            }
+        };
+    }
+
+    public void resetGame(View view){
+        View.OnClickListener ocl = createOnClickListener();
+        View.OnLongClickListener olcl = createOnLongClickListener();
+        mGameBoard = new GameBoard(mRow, mCols);
+        instantiateBoard(ocl, olcl);
     }
 
     class Tile extends AppCompatImageView {
@@ -79,8 +107,16 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         }
 
-        public void switchImage(){
+        public void switchFlag(){
             mImage = mImage == R.drawable.tile ? R.drawable.tile_flag : R.drawable.tile;
+            setImageResource(mImage);
+        }
+
+        public void clicked(){
+            if(mGameBoard.isBomb(mRow, mCol))
+                mImage = R.drawable.tile_bomb;
+            else
+                setImage();
             setImageResource(mImage);
         }
 
