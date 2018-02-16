@@ -32,16 +32,16 @@ public class MainActivity extends AppCompatActivity {
         mCols = 10;
         mTiles = new Tile[mRow][mCols];
 
-        mGameBoard = new GameBoard(mRow, mCols, 30);
+        mGameBoard = new GameBoard(mRow, mCols, 25);
 
         View.OnClickListener ocl = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Tile tile = (Tile)v;
                 tile.showPosition();
-                tile.switchImage();
             }
         };
+
         instantiateBoard(ocl);
     }
 
@@ -82,6 +82,40 @@ public class MainActivity extends AppCompatActivity {
         public void switchImage(){
             mImage = mImage == R.drawable.tile ? R.drawable.tile_flag : R.drawable.tile;
             setImageResource(mImage);
+        }
+
+        private void setImage(){
+            switch (mGameBoard.getBombsAroundTile(mRow, mCol)){
+                case 0:
+                    mImage = R.drawable.tile_blank;
+                    break;
+                case 1:
+                    mImage = R.drawable.tile_one;
+                    break;
+                case 2:
+                    mImage = R.drawable.tile_two;
+                    break;
+                case 3:
+                    mImage = R.drawable.tile_three;
+                    break;
+                case 4:
+                    mImage = R.drawable.tile_four;
+                    break;
+                case 5:
+                    mImage = R.drawable.tile_five;
+                    break;
+                case 6:
+                    mImage = R.drawable.tile_six;
+                    break;
+                case 7:
+                    mImage = R.drawable.tile_seven;
+                    break;
+                case 8:
+                    mImage = R.drawable.tile_eight;
+                    break;
+                default:
+                    mImage = R.drawable.tile;
+            }
         }
     }
 }

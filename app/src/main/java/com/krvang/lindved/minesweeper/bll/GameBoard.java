@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class GameBoard implements IGameBoard {
 
-    private final int BOMB_DISTRIBUTION_FACTOR = 2;
+    private final int BOMB_DISTRIBUTION_FACTOR = 4;
 
     private int mRows, mCols, mAmountOfBombs, mAvailableTiles;
     private boolean[][] mBombMatrix;
@@ -27,16 +27,20 @@ public class GameBoard implements IGameBoard {
     private void populateBombs(){
         Random rand = new Random();
         int bombsPlaced = 0;
+        int tilesPlaced = 0;
         for(int i = 0; i < mRows; i++){
             for(int j = 0; j < mCols; j++){
-                if((mAmountOfBombs - bombsPlaced) == mAvailableTiles){
+                if(rand.nextInt(BOMB_DISTRIBUTION_FACTOR) == 0 && bombsPlaced != mAmountOfBombs){
                     mBombMatrix[i][j] = true;
                     bombsPlaced++;
-                }else if(rand.nextInt(BOMB_DISTRIBUTION_FACTOR) == 0){
+                    tilesPlaced++;
+                }else if(mAvailableTiles - tilesPlaced == mAmountOfBombs - bombsPlaced){
                     mBombMatrix[i][j] = true;
                     bombsPlaced++;
+                    tilesPlaced++;
                 }else{
                     mBombMatrix[i][j] = false;
+                    tilesPlaced++;
                 }
             }
         }
@@ -44,5 +48,37 @@ public class GameBoard implements IGameBoard {
 
     public boolean isBomb(int row, int col){
         return mBombMatrix[row][col];
+    }
+
+    public int getBombsAroundTile(int row, int col){
+        int bombs = 0;
+
+        boolean validRowNegative = row - 1 >= 0;
+        boolean validRowPositive = row + 1 < mRows;
+
+        boolean validColNegative = col - 1 >= 0;
+        boolean validColPositive = col + 1 < mCols;
+
+        if(validRowNegative && mBombMatrix[row - 1][col])
+            bombs++;
+        if (validRowNegative && validColNegative && mBombMatrix[row - 1][col - 1])
+            bombs++;
+        if(validRowNegative && validColPositive && mBombMatrix[row - 1][col + 1])
+            bombs++;
+
+        if(validRowPositive && mBombMatrix[row + 1][col])
+            bombs++;
+        if(validRowPositive && validColNegative && mBombMatrix[row + 1][col - 1])
+            bombs++;
+        if(validRowPositive && validColPositive && mBombMatrix[row + 1][col + 1])
+            bombs++;
+
+        if(validColPositive && mBombMatrix[row][col + 1])
+            bombs++;
+
+        if(validColNegative && mBombMatrix[row][col - 1])
+            bombs++;
+
+        return bombs;
     }
 }
