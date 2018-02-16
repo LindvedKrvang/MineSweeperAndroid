@@ -5,4 +5,6 @@ package com.krvang.lindved.minesweeper.bll;
  */
 
 public interface IGameBoard {
+
+    boolean isBomb(int row, int col);
 }

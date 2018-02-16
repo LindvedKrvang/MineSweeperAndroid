@@ -4,17 +4,20 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.krvang.lindved.minesweeper.R;
+import com.krvang.lindved.minesweeper.bll.GameBoard;
+import com.krvang.lindved.minesweeper.bll.IGameBoard;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private LinearLayout mGameBoard;
+    private LinearLayout mGameBoardLayout;
+
+    private IGameBoard mGameBoard;
 
     private int mRow, mCols;
     private Tile[][] mTiles;
@@ -24,9 +27,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         mRow = 10;
         mCols = 10;
         mTiles = new Tile[mRow][mCols];
+
+        mGameBoard = new GameBoard(mRow, mCols, 30);
 
         View.OnClickListener ocl = new View.OnClickListener() {
             @Override
@@ -40,11 +46,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void instantiateBoard(View.OnClickListener ocl){
-        mGameBoard = findViewById(R.id.llGameBoard);
-        mGameBoard.removeAllViews();
+        mGameBoardLayout = findViewById(R.id.llGameBoard);
+        mGameBoardLayout.removeAllViews();
         for(int i = 0; i < mRow; i++){
             LinearLayout layoutRow = new LinearLayout(this);
-            mGameBoard.addView(layoutRow);
+            mGameBoardLayout.addView(layoutRow);
             layoutRow.setOrientation(LinearLayout.HORIZONTAL);
             for(int j = 0; j < mCols; j++){
                 Tile tile = new Tile(this, i, j);
@@ -68,7 +74,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void showPosition(){
-            Toast.makeText(super.getContext(), "(" + mRow + ":" + mCol + ")", Toast.LENGTH_SHORT).show();
+            Toast.makeText(super.getContext(),
+                    "(" + mRow + ":" + mCol + ") is a bomb: " + mGameBoard.isBomb(mRow, mCol),
+                    Toast.LENGTH_SHORT).show();
         }
 
         public void switchImage(){
